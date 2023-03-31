@@ -6,15 +6,24 @@
     "apps/*",
     "packages/*"
   ],
+  "prisma": {
+    "schema": "packages/database/prisma/schema.prisma",
+    "seed": "tsx packages/database/src/seed.ts"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:web": "pnpm --filter web run dev",
+    "dev:studio": "pnpm --filter web run studio",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^3.7.2",
+    "@types/prettier": "^2.7.2",
     "eslint-config-custom": "workspace:*",
     "prettier": "latest",
+    "prettier-plugin-tailwindcss": "^0.2.6",
     "turbo": "latest"
   },
   "engines": {
