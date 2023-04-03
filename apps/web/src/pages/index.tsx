@@ -4,9 +4,105 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "@/utils/api";
+import React, { useCallback, use } from "react";
+import {
+  PlaidLinkOnSuccess,
+  PlaidLinkOnEvent,
+  PlaidLinkOnExit,
+  PlaidLinkOptions,
+  usePlaidLink,
+} from "react-plaid-link";
+import { usePlaidAccessToken, usePlaidLinkToken } from "@/hooks/usePlaid";
 
 const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const [publicToken, setPublicToken] = React.useState<string | null>(null);
+  const [account, setAccount] = React.useState();
+  const [transactions, setTransactions] = React.useState();
+
+  const { data: dataLink } = usePlaidLinkToken();
+  const { data: dataAccess } = usePlaidAccessToken({ publicToken });
+
+  console.log("linkToken: ", dataLink?.linkToken);
+  console.log("dataAccess: ", dataAccess);
+
+  const onSuccess = React.useCallback<PlaidLinkOnSuccess>(
+    (publicToken, metadata) => {
+      // send public_token to your server
+      // https://plaid.com/docs/api/tokens/#token-exchange-flow
+      console.log(publicToken, metadata);
+      setPublicToken(publicToken);
+    },
+    []
+  );
+  const onEvent = useCallback<PlaidLinkOnEvent>((eventName, metadata) => {
+    // log onEvent callbacks from Link
+    // https://plaid.com/docs/link/web/#onevent
+    console.log(eventName, metadata);
+  }, []);
+  const onExit = useCallback<PlaidLinkOnExit>((error, metadata) => {
+    // log onExit callbacks from Link, handle errors
+    // https://plaid.com/docs/link/web/#onexit
+    console.log(error, metadata);
+  }, []);
+
+  const config: PlaidLinkOptions = {
+    token: dataLink?.linkToken,
+    onSuccess,
+    onEvent,
+    onExit,
+  };
+
+  const {
+    open,
+    ready,
+    // error,
+    // exit
+  } = usePlaidLink(config);
+
+  React.useEffect(() => {
+    if (!dataAccess) return;
+    async function getAccessToken() {
+      try {
+        console.log("dataAccess: ", dataAccess?.accessToken);
+        // POST request using fetch() and JSON
+        const auth = await fetch("/api/plaid/auth", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accessToken: dataAccess?.accessToken,
+          }),
+        });
+        // Parse the response as JSON
+        const authData = await auth.json();
+
+        console.log("authData: ", authData);
+
+        // POST request using fetch() and JSON
+        const transactions = await fetch("/api/plaid/transactions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accessToken: dataAccess?.accessToken,
+          }),
+        });
+
+        const transacationdata = await transactions.json();
+
+        setTransactions(transacationdata);
+
+        setAccount(authData.numbers.ach[0]);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getAccessToken();
+  }, [dataAccess?.accessToken]);
 
   return (
     <>
@@ -20,6 +116,18 @@ const Home: NextPage = () => {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
           </h1>
+          <h3>PLAID TOKEN: {publicToken}</h3>
+          <button onClick={() => open()} disabled={!ready}>
+            Connect a bank account
+          </button>
+
+          {account ? (
+            <div className="flex flex-col text-lg text-white">
+              <p>Account number: {account.account}</p>
+              <p>Routing number: {account.routing}</p>
+              <p>Account info: {transactions.accounts[0].account_id} </p>
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             <Link
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
@@ -63,7 +171,7 @@ const AuthShowcase: React.FC = () => {
 
   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: sessionData?.user !== undefined },
+    { enabled: sessionData?.user !== undefined }
   );
 
   return (

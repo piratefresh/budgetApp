@@ -52,12 +52,14 @@ importers:
       '@next-auth/prisma-adapter': ^1.0.5
       '@prisma/client': ^4.11.0
       '@tanstack/react-query': ^4.28.0
+      '@tanstack/react-query-devtools': ^4.28.0
       '@trpc/client': ^10.18.0
       '@trpc/next': ^10.18.0
       '@trpc/react-query': ^10.18.0
       '@trpc/server': ^10.18.0
       '@types/eslint': ^8.21.3
       '@types/node': ^18.15.5
+      '@types/plaid-link': ^2.0.12
       '@types/prettier': ^2.7.2
       '@types/react': ^18.0.28
       '@types/react-dom': ^18.0.11
@@ -87,6 +89,7 @@ importers:
       '@next-auth/prisma-adapter': 1.0.5_gpg6dgjko2tfickallol6oguta
       '@prisma/client': 4.12.0_prisma@4.12.0
       '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query-devtools': 4.28.0_q4teel2yjbizrm4naiaqcdpjum
       '@trpc/client': 10.18.0_@trpc+server@10.18.0
       '@trpc/next': 10.18.0_fk7ybuwqrs7skzzxcj6wjc5c3i
       '@trpc/react-query': 10.18.0_rcvfzig2xktluz4p7kugxqlbwi
@@ -104,6 +107,7 @@ importers:
     devDependencies:
       '@types/eslint': 8.37.0
       '@types/node': 18.15.11
+      '@types/plaid-link': 2.0.12
       '@types/prettier': 2.7.2
       '@types/react': 18.0.31
       '@types/react-dom': 18.0.11
@@ -952,8 +956,30 @@ packages:
       tslib: 2.5.0
     dev: false
 
+  /@tanstack/match-sorter-utils/8.8.4:
+    resolution: {integrity: sha512-rKH8LjZiszWEvmi01NR72QWZ8m4xmXre0OOwlRGnjU01Eqz/QnN+cqpty2PJ0efHblq09+KilvyR7lsbzmXVEw==}
+    engines: {node: '>=12'}
+    dependencies:
+      remove-accents: 0.4.2
+    dev: false
+
   /@tanstack/query-core/4.27.0:
     resolution: {integrity: sha512-sm+QncWaPmM73IPwFlmWSKPqjdTXZeFf/7aEmWh00z7yl2FjqophPt0dE1EHW9P1giMC5rMviv7OUbSDmWzXXA==}
+    dev: false
+
+  /@tanstack/react-query-devtools/4.28.0_q4teel2yjbizrm4naiaqcdpjum:
+    resolution: {integrity: sha512-1SnoMw1CWn8FdPEIHvlAzmMBX3heXJo11fyBtt+FzYAHj5yFC8P67Kpgi0HpLkY7SLnd6QK/7qFkpeH4AQbgZg==}
+    peerDependencies:
+      '@tanstack/react-query': 4.28.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@tanstack/match-sorter-utils': 8.8.4
+      '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      superjson: 1.12.2
+      use-sync-external-store: 1.2.0_react@18.2.0
     dev: false
 
   /@tanstack/react-query/4.28.0_biqbaboplfbrettd7655fr4n2y:
@@ -1047,6 +1073,10 @@ packages:
 
   /@types/node/18.15.11:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
+    dev: true
+
+  /@types/plaid-link/2.0.12:
+    resolution: {integrity: sha512-R4UNJXfBcKlMxMntAwexCiZLY+g72ODnboDP5IdCRSVv2GUsHYV9T+U82zRVIe79GqcPVczvzaKuGLCWkQezPQ==}
     dev: true
 
   /@types/prettier/2.7.2:
@@ -3769,6 +3799,10 @@ packages:
   /regexpp/3.2.0:
     resolution: {integrity: sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==}
     engines: {node: '>=8'}
+
+  /remove-accents/0.4.2:
+    resolution: {integrity: sha512-7pXIJqJOq5tFgG1A2Zxti3Ht8jJF337m4sowbuHsW30ZnkQFnDzy9qBNhgzX8ZLW4+UBcXiiR7SwR6pokHsxiA==}
+    dev: false
 
   /require-from-string/2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
